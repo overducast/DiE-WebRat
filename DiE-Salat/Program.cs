@@ -65,19 +65,59 @@ namespace DiE_WebRat
 
         static byte[][] rawPatterns = new byte[][]
         {
-            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x64, 0x65, 0x63, 0x72, 0x79, 0x70, 0x74, 0x44, 0x61, 0x74, 0x61, 0x45, 0x64, 0x67, 0x65, 0x00 },
-            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x64, 0x65, 0x63, 0x72, 0x79, 0x70, 0x74, 0x44, 0x61, 0x74, 0x61, 0x42, 0x72, 0x61, 0x76, 0x65, 0x00 },
-            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x73, 0x74, 0x61, 0x72, 0x74, 0x4B, 0x65, 0x79, 0x6C, 0x6F, 0x67, 0x67, 0x65, 0x72, 0x00 },
-            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x73, 0x74, 0x6F, 0x70, 0x4B, 0x65, 0x79, 0x6C, 0x6F, 0x67, 0x67, 0x65, 0x72, 0x00 },
-            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x72, 0x75, 0x6E, 0x4B, 0x65, 0x79, 0x6C, 0x6F, 0x67, 0x67, 0x65, 0x72, 0x00 },
-            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x53, 0x74, 0x65, 0x61, 0x6C, 0x00 }
+            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x64, 0x65, 0x63, 0x72, 0x79, 0x70, 0x74, 0x44, 0x61, 0x74, 0x61, 0x45, 0x64, 0x67, 0x65, 0x00 }, // main.decryptDataEdge
+            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x64, 0x65, 0x63, 0x72, 0x79, 0x70, 0x74, 0x44, 0x61, 0x74, 0x61, 0x42, 0x72, 0x61, 0x76, 0x65, 0x00 },// main.decryptDataBrave
+            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x73, 0x74, 0x61, 0x72, 0x74, 0x4B, 0x65, 0x79, 0x6C, 0x6F, 0x67, 0x67, 0x65, 0x72, 0x00 },// main.startKeylogger
+            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x73, 0x74, 0x6F, 0x70, 0x4B, 0x65, 0x79, 0x6C, 0x6F, 0x67, 0x67, 0x65, 0x72, 0x00 },// main.stopKeylogger
+            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x72, 0x75, 0x6E, 0x4B, 0x65, 0x79, 0x6C, 0x6F, 0x67, 0x67, 0x65, 0x72, 0x00 },// main.runKeylogger
+            new byte[] { 0x6D, 0x61, 0x69, 0x6E, 0x2E, 0x53, 0x74, 0x65, 0x61, 0x6C, 0x00 }// main.Steal
+            /* 
+            you can add more rules for detect what i collect, 
+            Login Data
+6C 6F 67 69 6E 20 44 61 74 61
+
+Cookies
+43 6F 6F 6B 69 65 73
+
+Local State
+4C 6F 63 61 6C 20 53 74 61 74 65
+
+History
+48 69 73 74 6F 72 79
+
+Web Data
+57 65 62 20 44 61 74 61
+
+config.vdf
+63 6F 6E 66 69 67 2E 76 64 66
+
+AccountId-
+41 63 63 6F 75 6E 74 49 64 2D
+
+WRONG JSON
+57 52 4F 4E 47 20 4A 53 4F 4E
+
+GOT RESULT
+47 4F 54 20 52 45 53 55 4C 54
+
+call stuck
+63 61 6C 6C 20 73 74 75 63 6B
+
+ENCKEY ERR
+45 4E 43 4B 45 59 20 45 52 52
+
+NO PREAPPB
+4E 4F 20 50 52 45 41 50 50 42
+
+myhostname
+6D 79 68 6F 73 74 6E 61 6D 65*/
         };
 
         static int[][] bmhShiftTables;
 
         static void Main(string[] args)
         {
-            singleInstanceMutex = new Mutex(true, "Local\\DiEWebRat_SingleInstance", out bool isFirst);
+            singleInstanceMutex = new Mutex(true, "Local\\DiEWebRat_SingleInstance", out bool isFirst); // neuro mutex 
             if (!isFirst) return;
 
             if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)) return;
@@ -87,7 +127,7 @@ namespace DiE_WebRat
             {
                 while (true)
                 {
-                    int titleLen = Rnd.Next(6, 12);
+                    int titleLen = Rnd.Next(6, 12); // title 
                     char[] tBuffer = new char[titleLen];
                     for (int i = 0; i < titleLen; i++) tBuffer[i] = Chars[Rnd.Next(Chars.Length)];
                     SetWindowText(hw, new string(tBuffer));
@@ -115,8 +155,8 @@ namespace DiE_WebRat
                 CloseHandle(tkn);
             }
             Console.WriteLine("SeDebugPrivilege");
-            Console.WriteLine("[ % ] github -> https://github.com/overducast/DiE-WebRat");
-            Console.WriteLine("[ @ ] Author Telegram -> @codevirtualizer");
+            Console.WriteLine("[ % ] github -> https://github.com/overducast/DiE-WebRat");// github
+            Console.WriteLine("[ @ ] Author Telegram -> @codevirtualizer");// telegram
 
             ScanSystemContext();
 
@@ -157,7 +197,7 @@ namespace DiE_WebRat
         {
             if (p.Id == Process.GetCurrentProcess().Id || p.Id == 0 || p.Id == 4) return;
 
-            try { if (p.WorkingSet64 < 1500000) return; } catch { }
+            try { if (p.WorkingSet64 < 1500000) return; } catch { } // 1,5mb 
 
             IntPtr hProc = OpenProcess(0x0010 | 0x1000, false, p.Id);
             if (hProc == IntPtr.Zero) return;
@@ -241,7 +281,7 @@ namespace DiE_WebRat
                 p.Kill();
                 p.WaitForExit(3000);
 
-                Console.WriteLine($"Sorry NyashTeam you get fucked:(");
+                Console.WriteLine($"Sorry NyashTeam you get fucked:(");// i like this:)
                 Console.WriteLine($"[ $ ] PID: {pid}");
                 Console.WriteLine($"[ $ ] NAME: {pName}");
                 Console.WriteLine($"[ $ ] BASE: 0x{imgBase.ToInt64():X}");
